@@ -48,25 +48,25 @@ Setting a specific password
 ---------------------------
 
 If you want to use a preset password instead of a random generated one, you can
-set the environment variable `REDIS_PASS` to your specific password when running the container:
+set the environment variable `REDISCONF_PASS` to your specific password when running the container:
 
-	docker run -d -p 6379:6379 -e REDIS_PASS="mypass" tutum/redis
+	docker run -d -p 6379:6379 -e REDISCONF_PASS="mypass" tutum/redis
 
 You can now test your deployment:
 
 	redis-cli -a mypass
 
-If you want to disable password authentication, you can set `REDIS_PASS` to `**None**`:
+If you want to disable password authentication, you can set `REDISCONF_PASS` to `**None**`:
 
-    docker run -d -p 6379:6379 -e REDIS_PASS="**None**" tutum/redis
+    docker run -d -p 6379:6379 -e REDISCONF_PASS="**None**" tutum/redis
 
 
 Configuring Redis
 -----------------
 
-If you want to pass in any configuration variable to redis, set it as an environment variable with a `REDIS_` prefix. For example, if you want to set `tcp-keepalive 60`, execute the following:
+If you want to pass in any configuration variable to redis, set it as an environment variable with a `REDISCONF_` prefix. For example, if you want to set `tcp-keepalive 60`, execute the following:
 
-	docker run -d -p 6379:6379 -e REDIS_TCP_KEEPALIVE=60 tutum/redis
+	docker run -d -p 6379:6379 -e REDISCONF_TCP_KEEPALIVE=60 tutum/redis
 
 For a full list of configuration options, check [this commented redis.conf file](https://raw.githubusercontent.com/antirez/redis/2.8/redis.conf)
 
@@ -77,7 +77,7 @@ Configuring Redis as a LRU cache
 In order to run Redis as a cache that will delete older entries when the memory fills up
 provide the following additional environment variables:
 
-	docker run -d -p 6379:6379 -e REDIS_MAXMEMORY_POLICY="allkeys-lru" -e REDIS_MAXMEMORY="256mb" tutum/redis
+	docker run -d -p 6379:6379 -e REDISCONF_MAXMEMORY_POLICY="allkeys-lru" -e REDISCONF_MAXMEMORY="256mb" tutum/redis
 
 More info at [redis.io](http://redis.io/topics/lru-cache)
 
@@ -87,8 +87,8 @@ Configuring Redis to use AOF
 
 If you want Redis to store data in a volume to prevent data from disappearing should you restart the container, set the following environment variables:
 
-	docker run -d -p 6379:6379 -e REDIS_APPENDONLY=yes -e REDIS_APPENDFSYNC=always tutum/redis
+	docker run -d -p 6379:6379 -e REDISCONF_APPENDONLY=yes -e REDISCONF_APPENDFSYNC=always tutum/redis
 
-Please note that this will impact performance. For a more lightweight persistence by saving every second instead of every instruction, use `REDIS_APPENDFSYNC=everysec` instead. More info at [redis.io](http://redis.io/topics/persistence)
+Please note that this will impact performance. For a more lightweight persistence by saving every second instead of every instruction, use `REDISCONF_APPENDFSYNC=everysec` instead. More info at [redis.io](http://redis.io/topics/persistence)
 
 **by http://www.tutum.co**

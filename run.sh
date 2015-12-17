@@ -1,16 +1,16 @@
 #!/bin/bash
 
-if [ "${REDIS_PASS}" == "**Random**" ]; then
-    unset REDIS_PASS
+if [ "${REDISCONF_PASS}" == "**Random**" ]; then
+    unset REDISCONF_PASS
 fi
 
 # Set initial configuration
 if [ ! -f /.redis_configured ]; then
     touch /etc/redis/redis_default.conf
 
-    if [ "${REDIS_PASS}" != "**None**" ]; then
-        PASS=${REDIS_PASS:-$(pwgen -s 32 1)}
-        _word=$( [ ${REDIS_PASS} ] && echo "preset" || echo "random" )
+    if [ "${REDISCONF_PASS}" != "**None**" ]; then
+        PASS=${REDISCONF_PASS:-$(pwgen -s 32 1)}
+        _word=$( [ ${REDISCONF_PASS} ] && echo "preset" || echo "random" )
         echo "=> Securing redis with a ${_word} password"
         echo "requirepass $PASS" >> /etc/redis/redis_default.conf
         echo "=> Done!"
@@ -23,19 +23,19 @@ if [ ! -f /.redis_configured ]; then
         echo "========================================================================"
     fi
 
-    unset REDIS_PASS
+    unset REDISCONF_PASS
 
     # Backwards compatibility
-    if [ ! -z "${REDIS_MODE}" ]; then
-        echo "!! WARNING: \$REDIS_MODE is deprecated. Please use \$REDIS_MAXMEMORY_POLICY instead"
-        if [ "${REDIS_MODE}" == "LRU" ]; then
-            export REDIS_MAXMEMORY_POLICY=allkeys-lru
-            unset REDIS_MODE
+    if [ ! -z "${REDISCONF_MODE}" ]; then
+        echo "!! WARNING: \$REDISCONF_MODE is deprecated. Please use \$REDISCONF_MAXMEMORY_POLICY instead"
+        if [ "${REDISCONF_MODE}" == "LRU" ]; then
+            export REDISCONF_MAXMEMORY_POLICY=allkeys-lru
+            unset REDISCONF_MODE
         fi
     fi
 
-    for i in $(printenv | grep REDIS_); do
-        echo $i | sed "s/REDIS_//" | sed "s/_/-/" | sed "s/=/ /" | sed "s/^[^ ]*/\L&\E/" >> /etc/redis/redis_default.conf
+    for i in $(printenv | grep REDISCONF_); do
+        echo $i | sed "s/REDISCONF_//" | sed "s/_/-/" | sed "s/=/ /" | sed "s/^[^ ]*/\L&\E/" >> /etc/redis/redis_default.conf
     done
 
     echo "=> Using redis.conf:"
